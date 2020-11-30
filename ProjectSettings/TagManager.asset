@@ -41,3 +41,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: MiniGame
+    uniqueID: 590398519
+    locked: 0
+  - name: New Layer
+    uniqueID: 1734191933
+    locked: 0
