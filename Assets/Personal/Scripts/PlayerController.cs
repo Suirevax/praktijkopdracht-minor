@@ -10,8 +10,10 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] GameObject playerNamePlatePrefab;
     GameObject playerNamePlate = null;
     [SerializeField] Vector2 namePlateOffset = new Vector2(0, 0);
-    string playerName = "#NONAME#";
-    
+    public string playerName = "#NONAME#";
+
+    bool ready = false;
+
     [SyncVar]
     public int playerNumber = -1;
 
@@ -25,12 +27,15 @@ public class PlayerController : NetworkBehaviour
     {
         currentState = playerState.alive;
         playerNamePlate = Instantiate(playerNamePlatePrefab, GameObject.Find("GameCanvas").transform);
-        playerNamePlate.GetComponent<TMP_Text>().text = playerNumber.ToString();
     }
 
     private void Update()
     {
-        playerNamePlate.transform.position = transform.position + (Vector3)namePlateOffset;
+        if (playerNamePlate)
+        {
+            playerNamePlate.GetComponent<TMP_Text>().text = playerName;
+            playerNamePlate.transform.position = transform.position + (Vector3)namePlateOffset;
+        }
     }
 
     [Client]
@@ -132,7 +137,10 @@ public class PlayerController : NetworkBehaviour
 
     private void OnEnable()
     {
-        playerNamePlate.SetActive(true);
+        if (playerNamePlate)
+        {
+            playerNamePlate.SetActive(true);
+        }
     }
 
     private void OnDisable()

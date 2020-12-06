@@ -677,7 +677,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1079895988
 RectTransform:
   m_ObjectHideFlags: 0
@@ -996,9 +996,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Network Manager
       objectReference: {fileID: 0}
-    - target: {fileID: 2197350703381300268, guid: ad9e58f3d181c0e4289887f534c0c879,
+    - target: {fileID: 2197350703381300270, guid: ad9e58f3d181c0e4289887f534c0c879,
         type: 3}
-      propertyPath: Interval
+      propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2197350703381300270, guid: ad9e58f3d181c0e4289887f534c0c879,
@@ -1018,6 +1018,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2197350703381300270, guid: ad9e58f3d181c0e4289887f534c0c879,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2197350703381300270, guid: ad9e58f3d181c0e4289887f534c0c879,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -1030,16 +1035,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2197350703381300270, guid: ad9e58f3d181c0e4289887f534c0c879,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2197350703381300270, guid: ad9e58f3d181c0e4289887f534c0c879,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2197350703381300270, guid: ad9e58f3d181c0e4289887f534c0c879,
         type: 3}
@@ -1058,13 +1053,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6182085593188982819, guid: ad9e58f3d181c0e4289887f534c0c879,
         type: 3}
-      propertyPath: autoCreatePlayer
-      value: 1
+      propertyPath: game
+      value: Assets/Personal/Scenes/Game.unity
       objectReference: {fileID: 0}
     - target: {fileID: 6182085593188982819, guid: ad9e58f3d181c0e4289887f534c0c879,
         type: 3}
-      propertyPath: showDebugMessages
-      value: 0
+      propertyPath: lobby
+      value: Assets/Personal/Scenes/Lobby.unity
+      objectReference: {fileID: 0}
+    - target: {fileID: 6182085593188982819, guid: ad9e58f3d181c0e4289887f534c0c879,
+        type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6182085593188982819, guid: ad9e58f3d181c0e4289887f534c0c879,
+        type: 3}
+      propertyPath: onlineScene
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6182085593188982819, guid: ad9e58f3d181c0e4289887f534c0c879,
+        type: 3}
+      propertyPath: offlineScene
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6182085593188982819, guid: ad9e58f3d181c0e4289887f534c0c879,
+        type: 3}
+      propertyPath: autoCreatePlayer
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad9e58f3d181c0e4289887f534c0c879, type: 3}

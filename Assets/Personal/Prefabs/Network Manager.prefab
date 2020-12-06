@@ -76,7 +76,7 @@ MonoBehaviour:
   CongestionWindow: 1
   SendWindowSize: 128
   ReceiveWindowSize: 128
-  debugGUI: 1
+  debugGUI: 0
 --- !u!114 &6182085593188982819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95,18 +95,27 @@ MonoBehaviour:
   showDebugMessages: 0
   serverTickRate: 30
   offlineScene: Assets/Personal/Scenes/Title.unity
-  onlineScene: Assets/Personal/Scenes/Game.unity
+  onlineScene: Assets/Personal/Scenes/Lobby.unity
   transport: {fileID: 2197350703381300268}
   networkAddress: localhost
-  maxConnections: 4
+  maxConnections: 6
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 1250637316902307327, guid: 56a5c939ba9ba60468cc379e7b560560,
     type: 3}
-  autoCreatePlayer: 1
-  playerSpawnMethod: 0
+  autoCreatePlayer: 0
+  playerSpawnMethod: 1
   spawnPrefabs: []
+  showRoomGUI: 1
+  minPlayers: 1
+  roomPlayerPrefab: {fileID: 6854242285682859520, guid: 56a5c939ba9ba60468cc379e7b560560,
+    type: 3}
+  RoomScene: Assets/Personal/Scenes/Lobby.unity
+  GameplayScene: Assets/Personal/Scenes/Game.unity
+  _allPlayersReady: 0
+  roomSlots: []
+  clientIndex: 0
 --- !u!114 &581791616979329965
 MonoBehaviour:
   m_ObjectHideFlags: 0
