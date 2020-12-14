@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class MiniGameManager : MonoBehaviour
 {
-    [SerializeField] GameObject miniGameCanvas = null;
-    [SerializeField] GameObject progressBar = null;
+    [SerializeField] RoundManager roundManager = null;
 
-    public enum state { none, targetPractice };
+    [SerializeField] GameObject miniGameCanvas = null;
+    [SerializeField] GameObject grammatica1 = null;
+
+    public enum state { none, targetPractice, grammatica1 };
     state currentState = state.none;
 
     private void Awake()
@@ -15,21 +17,28 @@ public class MiniGameManager : MonoBehaviour
         miniGameCanvas.SetActive(false);
     }
 
-    private void Update()
+    public void SetCurrentState(state newState)
     {
+        currentState = newState;
+
         switch (currentState)
         {
             case state.none:
+                grammatica1.SetActive(false);
                 miniGameCanvas.SetActive(false);
                 break;
             case state.targetPractice:
                 miniGameCanvas.SetActive(true);
                 break;
+            case state.grammatica1:
+                grammatica1.SetActive(true);
+                break;
         }
     }
 
-    public void setCurrentState(state newState)
+    public void Win()
     {
-        currentState = newState;
+        SetCurrentState(MiniGameManager.state.none);
+        roundManager.MiniGameWon();
     }
 }

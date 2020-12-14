@@ -2,11 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Mirror;
+using UnityEngine.Events;
 
-public class ProgressBar : MonoBehaviour
+
+public class ProgressBar : NetworkBehaviour
 {
-    [SerializeField] float progress = 0;
+    [SyncVar(hook = nameof(UpdateProgress))]
+    float progress = 0;
+
     float maxProgress = 100;
+
+    public static event UnityAction OnProgressFull;
 
     private void Start()
     {
@@ -15,8 +22,15 @@ public class ProgressBar : MonoBehaviour
 
     public void IncreaseProgress(float value)
     {
-        progress += value;
-        progress = Mathf.Clamp(progress, 0, maxProgress);
+        progress = Mathf.Clamp(progress + value, 0, maxProgress);
+    }
+
+    public void UpdateProgress(float oldValue, float newValue)
+    {
         GetComponent<Image>().fillAmount = progress / 100;
+        if(progress >= maxProgress)
+        {
+            OnProgressFull?.Invoke();
+        }
     }
 }

@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class TargetSpawner : MonoBehaviour
 {
-    [SerializeField] GameObject target = null;
+    [SerializeField] MiniGameManager miniGameManager = null;
+
+    [SerializeField] Target target = null;
     [SerializeField] GameObject minigamePanel = null;
 
     [SerializeField] float targetSpawnXOffset = 20;
     [SerializeField] float targetSpawnYOffset = 20;
 
-    [SerializeField] GameObject miniGameManager = null;
-
-    [SerializeField] GameObject progressBar = null;
 
     int score = 0;
     int goalScore = 3;
@@ -49,13 +48,9 @@ public class TargetSpawner : MonoBehaviour
         score += (int)value;
         if(score >= goalScore)
         {
-            Win();
+            miniGameManager.Win();
         }
     }
 
-    void Win()
-    {
-        miniGameManager.GetComponent<MiniGameManager>().setCurrentState(MiniGameManager.state.none);
-        progressBar.GetComponent<ProgressBar>().IncreaseProgress(10);
-    }
+
 }

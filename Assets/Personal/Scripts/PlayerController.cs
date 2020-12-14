@@ -10,32 +10,51 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] GameObject playerNamePlatePrefab;
     GameObject playerNamePlate = null;
     [SerializeField] Vector2 namePlateOffset = new Vector2(0, 0);
-    public string playerName = "#NONAME#";
-
-    bool ready = false;
-
-    [SyncVar]
-    public int playerNumber = -1;
 
     public enum playerState { alive, dead, inMiniGame };
 
     [SyncVar]
     public playerState currentState;
 
-    
+    XNetworkManager networkManager;
+
+    XNetworkManager NetworkManager
+    {
+        get
+        {
+            if (networkManager != null) { return networkManager; }
+            return networkManager = Mirror.NetworkManager.singleton as XNetworkManager;
+        }
+    }
+
+    [Client]
     private void Start()
     {
         currentState = playerState.alive;
         playerNamePlate = Instantiate(playerNamePlatePrefab, GameObject.Find("GameCanvas").transform);
+        if (hasAuthority)
+        {
+            CmdChangePlayerName(PlayerPrefs.GetString("PlayerName"));
+        }
     }
 
     private void Update()
     {
-        if (playerNamePlate)
+        if (playerNamePlate != null)
         {
-            playerNamePlate.GetComponent<TMP_Text>().text = playerName;
             playerNamePlate.transform.position = transform.position + (Vector3)namePlateOffset;
         }
+
+        if (isLocalPlayer)
+        {
+
+        }
+    }
+
+    public override void OnStartClient()
+    {
+        //DontDestroyOnLoad(gameObject);
+        NetworkManager.GamePlayers.Add(this);
     }
 
     [Client]
@@ -89,11 +108,9 @@ public class PlayerController : NetworkBehaviour
     }
 
     [Command]
-    //private void CmdMove(Vector2 movement) => transform.Translate(movement * movementSpeed * Time.deltaTime);
     private void CmdMove(Vector2 movement) {
         GetComponent<Rigidbody2D>().AddForce(movement.normalized * movementSpeed, ForceMode2D.Force);
     }
-
 
     [Command]
     public void CmdColorChange(Color newColor)
@@ -105,6 +122,18 @@ public class PlayerController : NetworkBehaviour
     void RpcColorChange(Color newColor)
     {
         GetComponent<SpriteRenderer>().color = newColor;
+    }
+
+    [Command]
+    void CmdChangePlayerName(string value)
+    {
+        RpcChangePlayerName(value);
+    }
+
+    [ClientRpc]
+    void RpcChangePlayerName(string value)
+    {
+        playerNamePlate.GetComponent<TMP_Text>().text = value;
     }
 
     [ClientRpc]
@@ -137,7 +166,7 @@ public class PlayerController : NetworkBehaviour
 
     private void OnEnable()
     {
-        if (playerNamePlate)
+        if (playerNamePlate != null)
         {
             playerNamePlate.SetActive(true);
         }
@@ -147,4 +176,12 @@ public class PlayerController : NetworkBehaviour
     {
         playerNamePlate.SetActive(false);
     }
+
+    //private void PlayerNameChanged(string oldValue, string newValue)
+    //{
+    //    if (playerNamePlate != null && isLocalPlayer)
+    //    {
+    //        playerNamePlate.GetComponent<TMP_Text>().text = playerName;
+    //    }
+    //}
 }

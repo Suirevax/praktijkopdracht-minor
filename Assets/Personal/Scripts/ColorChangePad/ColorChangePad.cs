@@ -3,20 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class MiniGamePad : MonoBehaviour
+public class ColorChangePad : MonoBehaviour
 {
-    [SerializeField] GameObject MiniGameManager = null;
+    [SerializeField] GameObject colorChangeBackGround = null;
 
     Color passiveColor = Color.white;
     Color selectedColor = Color.grey;
-
     bool selected = false;
+
+    private void Awake()
+    {
+        colorChangeBackGround.gameObject.SetActive(false);
+    }
 
     private void Update()
     {
         if(selected && Input.GetKey(KeyCode.Space))
         {
-            MiniGameManager.GetComponent<MiniGameManager>().setCurrentState(global::MiniGameManager.state.targetPractice);
+            colorChangeBackGround.gameObject.SetActive(true);
         }
     }
 
@@ -36,7 +40,7 @@ public class MiniGamePad : MonoBehaviour
         {
             GetComponent<SpriteRenderer>().color = passiveColor;
             selected = false;
-            MiniGameManager.GetComponent<MiniGameManager>().setCurrentState(global::MiniGameManager.state.none);
+            colorChangeBackGround.gameObject.SetActive(false);
         }
     }
 }

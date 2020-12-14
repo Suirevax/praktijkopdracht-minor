@@ -3,24 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class ColorChangePad : MonoBehaviour
+public class MiniGamePad : MonoBehaviour
 {
-    [SerializeField] Canvas colorChangeCanvas = null;
+    [SerializeField] GameObject MiniGameManager = null;
 
     Color passiveColor = Color.white;
     Color selectedColor = Color.grey;
-    bool selected = false;
 
-    private void Awake()
-    {
-        colorChangeCanvas.gameObject.SetActive(false);
-    }
+    bool selected = false;
 
     private void Update()
     {
         if(selected && Input.GetKey(KeyCode.Space))
         {
-            colorChangeCanvas.gameObject.SetActive(true);
+            //MiniGameManager.GetComponent<MiniGameManager>().SetCurrentState(global::MiniGameManager.state.targetPractice);
+            MiniGameManager.GetComponent<MiniGameManager>().SetCurrentState(global::MiniGameManager.state.grammatica1);
         }
     }
 
@@ -40,7 +37,7 @@ public class ColorChangePad : MonoBehaviour
         {
             GetComponent<SpriteRenderer>().color = passiveColor;
             selected = false;
-            colorChangeCanvas.gameObject.SetActive(false);
+            MiniGameManager.GetComponent<MiniGameManager>().SetCurrentState(global::MiniGameManager.state.none);
         }
     }
 }

@@ -120,7 +120,6 @@ MonoBehaviour:
   playerNamePlatePrefab: {fileID: 2496906470830182853, guid: 898dfd143d90bf043a0b1b0f36b5446c,
     type: 3}
   namePlateOffset: {x: 0, y: 0}
-  playerNumber: -1
   currentState: 0
 --- !u!60 &6559256926251574858
 PolygonCollider2D:
@@ -194,7 +193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0.02
+  syncInterval: 0
   clientAuthority: 0
   localPositionSensitivity: 0.01
   localRotationSensitivity: 0.01
