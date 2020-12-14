@@ -7,11 +7,14 @@ using TMPro;
 public class PlayerController : NetworkBehaviour
 {
     [SerializeField] float movementSpeed = 0f;
-    [SerializeField] GameObject playerNamePlatePrefab;
-    GameObject playerNamePlate = null;
+    [SerializeField] TMP_Text playerNamePlatePrefab;
+    TMP_Text playerNamePlate = null;
     [SerializeField] Vector2 namePlateOffset = new Vector2(0, 0);
 
     public enum playerState { alive, dead, inMiniGame };
+
+    [SyncVar(hook = nameof(PlayerNameChanged))]
+    string playerName = null;
 
     [SyncVar]
     public playerState currentState;
@@ -27,34 +30,37 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
+    private void Awake()
+    {
+        //DontDestroyOnLoad(gameObject);
+        NetworkManager.GamePlayers.Add(this);
+        playerNamePlate = Instantiate(playerNamePlatePrefab, GameObject.Find("GameCanvas").transform);
+    }
+
     [Client]
     private void Start()
     {
         currentState = playerState.alive;
-        playerNamePlate = Instantiate(playerNamePlatePrefab, GameObject.Find("GameCanvas").transform);
+        //if (hasAuthority)
+        //{
+        //    CmdChangePlayerName(PlayerPrefs.GetString("PlayerName"));
+        //}
+
         if (hasAuthority)
         {
             CmdChangePlayerName(PlayerPrefs.GetString("PlayerName"));
         }
     }
 
-    private void Update()
+    public override void OnStartServer()
     {
-        if (playerNamePlate != null)
-        {
-            playerNamePlate.transform.position = transform.position + (Vector3)namePlateOffset;
-        }
-
-        if (isLocalPlayer)
-        {
-
-        }
+        base.OnStartServer();
     }
 
-    public override void OnStartClient()
+    private void Update()
     {
-        //DontDestroyOnLoad(gameObject);
-        NetworkManager.GamePlayers.Add(this);
+        playerNamePlate.transform.position = transform.position;
+
     }
 
     [Client]
@@ -127,14 +133,14 @@ public class PlayerController : NetworkBehaviour
     [Command]
     void CmdChangePlayerName(string value)
     {
-        RpcChangePlayerName(value);
+        playerName = value;
     }
 
-    [ClientRpc]
-    void RpcChangePlayerName(string value)
-    {
-        playerNamePlate.GetComponent<TMP_Text>().text = value;
-    }
+    ////[ClientRpc]
+    //void RpcChangePlayerName(string oldValue, string newValue)
+    //{
+    //    playerNamePlate.GetComponent<TMP_Text>().text = newValue;
+    //}
 
     [ClientRpc]
     public void SetState(playerState newValue)
@@ -168,20 +174,20 @@ public class PlayerController : NetworkBehaviour
     {
         if (playerNamePlate != null)
         {
-            playerNamePlate.SetActive(true);
+            playerNamePlate.gameObject.SetActive(true);
         }
     }
 
     private void OnDisable()
     {
-        playerNamePlate.SetActive(false);
+        playerNamePlate.gameObject.SetActive(false);
     }
 
-    //private void PlayerNameChanged(string oldValue, string newValue)
-    //{
-    //    if (playerNamePlate != null && isLocalPlayer)
-    //    {
-    //        playerNamePlate.GetComponent<TMP_Text>().text = playerName;
-    //    }
-    //}
+    private void PlayerNameChanged(string oldValue, string newValue)
+    {
+        if (playerNamePlate != null)
+        {
+            playerNamePlate.GetComponent<TMP_Text>().text = playerName;
+        }
+    }
 }

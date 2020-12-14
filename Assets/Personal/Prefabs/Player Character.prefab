@@ -117,7 +117,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   movementSpeed: 50
-  playerNamePlatePrefab: {fileID: 2496906470830182853, guid: 898dfd143d90bf043a0b1b0f36b5446c,
+  playerNamePlatePrefab: {fileID: 5095304954239583268, guid: 898dfd143d90bf043a0b1b0f36b5446c,
     type: 3}
   namePlateOffset: {x: 0, y: 0}
   currentState: 0
