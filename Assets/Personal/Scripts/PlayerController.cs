@@ -14,10 +14,21 @@ public class PlayerController : NetworkBehaviour
     public enum playerState { alive, dead, inMiniGame };
 
     [SyncVar(hook = nameof(PlayerNameChanged))]
-    string playerName = null;
+    public string playerName = null;
 
     [SyncVar]
     public playerState currentState;
+
+    RoundManager roundManager;
+
+    RoundManager RoundManager
+    {
+        get
+        {
+            if(roundManager != null) { return roundManager; }
+            return roundManager = GameObject.Find("RoundManager").GetComponent<RoundManager>();
+        }
+    }
 
     XNetworkManager networkManager;
 
@@ -189,5 +200,11 @@ public class PlayerController : NetworkBehaviour
         {
             playerNamePlate.GetComponent<TMP_Text>().text = playerName;
         }
+    }
+
+    [Command]
+    public void CmdMiniGameWon()
+    {
+        RoundManager.MiniGameWon();
     }
 }

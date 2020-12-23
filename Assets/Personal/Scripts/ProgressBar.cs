@@ -6,9 +6,9 @@ using Mirror;
 using UnityEngine.Events;
 
 
-public class ProgressBar : NetworkBehaviour
+public class ProgressBar : MonoBehaviour
 {
-    [SyncVar(hook = nameof(UpdateProgress))]
+    //[SyncVar(hook = nameof(UpdateProgress))]
     float progress = 0;
 
     float maxProgress = 100;
@@ -23,14 +23,19 @@ public class ProgressBar : NetworkBehaviour
     public void IncreaseProgress(float value)
     {
         progress = Mathf.Clamp(progress + value, 0, maxProgress);
-    }
-
-    public void UpdateProgress(float oldValue, float newValue)
-    {
         GetComponent<Image>().fillAmount = progress / 100;
-        if(progress >= maxProgress)
+        if (progress >= maxProgress)
         {
             OnProgressFull?.Invoke();
         }
     }
+
+    //public void UpdateProgress(float oldValue, float newValue)
+    //{
+    //    GetComponent<Image>().fillAmount = progress / 100;
+    //    if (progress >= maxProgress)
+    //    {
+    //        OnProgressFull?.Invoke();
+    //    }
+    //}
 }

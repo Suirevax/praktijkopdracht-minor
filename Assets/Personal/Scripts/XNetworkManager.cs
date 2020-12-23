@@ -133,20 +133,20 @@ public class XNetworkManager : NetworkManager
 
     public override void OnServerSceneChanged(string sceneName)
     {
-        for (int i = RoomPlayers.Count-1; i >= 0; i--)
+        for (int i = RoomPlayers.Count - 1; i >= 0; i--)
         {
-            Debug.Log(i);
+            //Debug.Log(i);
             var conn = RoomPlayers[i].connectionToClient;
             var gameplayerInstance = Instantiate(gamePlayerPrefab);
             RoomPlayers.RemoveAt(i);
             //NetworkServer.Destroy(conn.identity.gameObject);
-            NetworkServer.DestroyPlayerForConnection(conn);
+            //NetworkServer.DestroyPlayerForConnection(conn);
             //gameplayerInstance.name = player.DisplayName;
 
-            //NetworkServer.ReplacePlayerForConnection(conn, gameplayerInstance.gameObject);
-            NetworkServer.AddPlayerForConnection(conn, gameplayerInstance.gameObject);
+            NetworkServer.ReplacePlayerForConnection(conn, gameplayerInstance.gameObject);
+            //NetworkServer.AddPlayerForConnection(conn, gameplayerInstance.gameObject);
         }
 
-        //base.OnServerSceneChanged(sceneName);
+        base.OnServerSceneChanged(sceneName);
     }
 }
