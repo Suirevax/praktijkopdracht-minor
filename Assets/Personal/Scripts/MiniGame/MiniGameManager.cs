@@ -40,7 +40,6 @@ public class MiniGameManager : MonoBehaviour
     public void Win()
     {
         PlayerController localplayer = NetworkClient.connection.identity.GetComponent<PlayerController>();
-        Debug.Log(localplayer.playerName);
         SetCurrentState(MiniGameManager.state.none);
         //roundManager.MiniGameWon();
         localplayer.CmdMiniGameWon();

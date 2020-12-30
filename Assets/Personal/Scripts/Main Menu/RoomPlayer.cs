@@ -8,121 +8,121 @@ using UnityEngine.UI;
 
 public class RoomPlayer : NetworkBehaviour
 {
-    [Header("UI")]
-    [SerializeField] private GameObject lobbyUI = null;
-    [SerializeField] private TMP_Text[] playerNameTexts = new TMP_Text[4];
-    [SerializeField] private TMP_Text[] playerReadyTexts = new TMP_Text[4];
-    [SerializeField] private Button startGameButton = null;
+    //[Header("UI")]
+    //[SerializeField] private GameObject lobbyUI = null;
+    //[SerializeField] private TMP_Text[] playerNameTexts = new TMP_Text[4];
+    //[SerializeField] private TMP_Text[] playerReadyTexts = new TMP_Text[4];
+    //[SerializeField] private Button startGameButton = null;
 
-    [SyncVar(hook = nameof(HandleDisplayNameChanged))]
-    public string DisplayName = "Loading...";
-    [SyncVar(hook = nameof(HandleReadyStatusChanged))]
-    public bool IsReady = false;
+    //[SyncVar(hook = nameof(HandleDisplayNameChanged))]
+    //public string DisplayName = "Loading...";
+    //[SyncVar(hook = nameof(HandleReadyStatusChanged))]
+    //public bool IsReady = false;
 
-    private bool isLeader;
-    public bool IsLeader
-    {
-        set
-        {
-            isLeader = value;
-            startGameButton.gameObject.SetActive(value);
-        }
-    }
-
-    private XNetworkManager room;
-    private XNetworkManager Room
-    {
-        get
-        {
-            if (room != null) { return room; }
-            return room = NetworkManager.singleton as XNetworkManager;
-        }
-    }
-
-    public override void OnStartAuthority()
-    {
-        CmdSetDisplayName(PlayerPrefs.GetString("PlayerName", "MISSING NAME IN PLAYERPREFS"));
-
-        lobbyUI.SetActive(true);
-    }
-
-    public override void OnStartClient()
-    {
-        Room.RoomPlayers.Add(this);
-
-        startGameButton.interactable = false;
-
-        UpdateDisplay();
-    }
-
-    //public override void OnNetworkDestroy()
+    //private bool isLeader;
+    //public bool IsLeader
     //{
-    //    Room.RoomPlayers.Remove(this);
+    //    set
+    //    {
+    //        isLeader = value;
+    //        startGameButton.gameObject.SetActive(value);
+    //    }
+    //}
+
+    //private XNetworkManager room;
+    //private XNetworkManager Room
+    //{
+    //    get
+    //    {
+    //        if (room != null) { return room; }
+    //        return room = NetworkManager.singleton as XNetworkManager;
+    //    }
+    //}
+
+    //public override void OnStartAuthority()
+    //{
+    //    CmdSetDisplayName(PlayerPrefs.GetString("PlayerName", "MISSING NAME IN PLAYERPREFS"));
+
+    //    lobbyUI.SetActive(true);
+    //}
+
+    //public override void OnStartClient()
+    //{
+    //    Room.RoomPlayers.Add(this);
+
+    //    startGameButton.interactable = false;
 
     //    UpdateDisplay();
     //}
 
-    public void HandleReadyStatusChanged(bool oldValue, bool newValue) => UpdateDisplay();
-    public void HandleDisplayNameChanged(string oldValue, string newValue) => UpdateDisplay();
+    ////public override void OnNetworkDestroy()
+    ////{
+    ////    Room.RoomPlayers.Remove(this);
 
-    private void UpdateDisplay()
-    {
-        if (!hasAuthority)
-        {
-            foreach (var player in Room.RoomPlayers)
-            {
-                if (player.hasAuthority)
-                {
-                    player.UpdateDisplay();
-                    break;
-                }
-            }
+    ////    UpdateDisplay();
+    ////}
 
-            return;
-        }
+    //public void HandleReadyStatusChanged(bool oldValue, bool newValue) => UpdateDisplay();
+    //public void HandleDisplayNameChanged(string oldValue, string newValue) => UpdateDisplay();
 
-        for (int i = 0; i < playerNameTexts.Length; i++)
-        {
-            playerNameTexts[i].text = "Waiting For Player...";
-            playerReadyTexts[i].text = string.Empty;
-        }
+    //private void UpdateDisplay()
+    //{
+    //    if (!hasAuthority)
+    //    {
+    //        foreach (var player in Room.RoomPlayers)
+    //        {
+    //            if (player.hasAuthority)
+    //            {
+    //                player.UpdateDisplay();
+    //                break;
+    //            }
+    //        }
 
-        for (int i = 0; i < Room.RoomPlayers.Count; i++)
-        {
-            playerNameTexts[i].text = Room.RoomPlayers[i].DisplayName;
-            playerReadyTexts[i].text = Room.RoomPlayers[i].IsReady ?
-                "<color=green>Ready</color>" :
-                "<color=red>Not Ready</color>";
-        }
-    }
+    //        return;
+    //    }
 
-    public void HandleReadyToStart(bool readyToStart)
-    {
-        if (!isLeader) { return; }
+    //    for (int i = 0; i < playerNameTexts.Length; i++)
+    //    {
+    //        playerNameTexts[i].text = "Waiting For Player...";
+    //        playerReadyTexts[i].text = string.Empty;
+    //    }
 
-        startGameButton.interactable = readyToStart;
-    }
+    //    for (int i = 0; i < Room.RoomPlayers.Count; i++)
+    //    {
+    //        playerNameTexts[i].text = Room.RoomPlayers[i].DisplayName;
+    //        playerReadyTexts[i].text = Room.RoomPlayers[i].IsReady ?
+    //            "<color=green>Ready</color>" :
+    //            "<color=red>Not Ready</color>";
+    //    }
+    //}
 
-    [Command]
-    private void CmdSetDisplayName(string displayName)
-    {
-        DisplayName = displayName;
-    }
+    //public void HandleReadyToStart(bool readyToStart)
+    //{
+    //    if (!isLeader) { return; }
 
-    [Command]
-    public void CmdReadyUp()
-    {
-        IsReady = !IsReady;
+    //    startGameButton.interactable = readyToStart;
+    //}
 
-        Room.NotifyPlayersOfReadyState();
-    }
+    //[Command]
+    //private void CmdSetDisplayName(string displayName)
+    //{
+    //    DisplayName = displayName;
+    //}
 
-    [Command]
-    public void CmdStartGame()
-    {
-        if (Room.RoomPlayers[0].connectionToClient != connectionToClient) { return; }
+    //[Command]
+    //public void CmdReadyUp()
+    //{
+    //    IsReady = !IsReady;
 
-        // Start Game
-        Room.StartGame();
-    }
+    //    Room.NotifyPlayersOfReadyState();
+    //}
+
+    //[Command]
+    //public void CmdStartGame()
+    //{
+    //    if (Room.RoomPlayers[0].connectionToClient != connectionToClient) { return; }
+
+    //    // Start Game
+    //    Room.StartGame();
+    //}
 }

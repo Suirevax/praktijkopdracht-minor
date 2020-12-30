@@ -8,10 +8,9 @@ public class XNetworkManager : NetworkManager
 {
     [SerializeField] private int minPlayers = 2;
     [Scene] [SerializeField] private string menuScene = string.Empty;
-    [Scene] [SerializeField] private string gameScene = string.Empty;
+    [Scene] [SerializeField] public string gameScene = string.Empty;
+    [Scene] [SerializeField] private string lobbyScene = string.Empty;
 
-    [Header("Room")]
-    [SerializeField] private RoomPlayer roomPlayerPrefab = null;
 
     [Header("Game")]
     [SerializeField] private PlayerController gamePlayerPrefab = null;
@@ -19,18 +18,7 @@ public class XNetworkManager : NetworkManager
     public static event UnityAction OnClientConnected;
     public static event UnityAction OnClientDisconnected;
 
-    public List<RoomPlayer> RoomPlayers { get; } = new List<RoomPlayer>();
-    public List<PlayerController> GamePlayers { get; } = new List<PlayerController>();
-
-    public override void OnStartServer()
-    {
-
-    }
-
-    public override void OnStartClient()
-    {
-
-    }
+    //public List<PlayerController> GamePlayers { get; private set; } = new List<PlayerController>();
 
     public override void OnClientConnect(NetworkConnection conn)
     {
@@ -48,32 +36,33 @@ public class XNetworkManager : NetworkManager
 
     public override void OnServerConnect(NetworkConnection conn)
     {
-        Debug.Log("numPlayers = " + numPlayers);
-        Debug.Log("maxConnections = " + maxConnections);
         if (numPlayers >= maxConnections)
         {
             conn.Disconnect();
             return;
         }
+    }
 
-        //if (/*SceneManager.GetActiveScene().name != menuScene*/ true)
-        //{
-        //    conn.Disconnect();
-        //    return;
-        //}
+    public void StartLobby()
+    {
+        ServerChangeScene(lobbyScene);
+    }
+
+    public override void OnStartHost()
+    {
+        base.OnStartHost();
+        StartLobby();
     }
 
     public override void OnServerAddPlayer(NetworkConnection conn)
     {
         if (/*SceneManager.GetActiveScene().name == menuScene*/ true)
         {
-            bool isLeader = RoomPlayers.Count == 0;
 
-            RoomPlayer roomPlayerInstance = Instantiate(roomPlayerPrefab);
+            PlayerController playerControllerInstance = Instantiate(gamePlayerPrefab);
 
-            roomPlayerInstance.IsLeader = isLeader;
 
-            NetworkServer.AddPlayerForConnection(conn, roomPlayerInstance.gameObject);
+            NetworkServer.AddPlayerForConnection(conn, playerControllerInstance.gameObject);
         }
     }
 
@@ -81,9 +70,9 @@ public class XNetworkManager : NetworkManager
     {
         if (conn.identity != null)
         {
-            var player = conn.identity.GetComponent<RoomPlayer>();
+            var player = conn.identity.GetComponent<PlayerController>();
 
-            RoomPlayers.Remove(player);
+            //GamePlayers.Remove(player);
 
             NotifyPlayersOfReadyState();
         }
@@ -93,24 +82,24 @@ public class XNetworkManager : NetworkManager
 
     public override void OnStopServer()
     {
-        RoomPlayers.Clear();
+        //GamePlayers.Clear();
     }
 
     public void NotifyPlayersOfReadyState()
     {
-        foreach (var player in RoomPlayers)
-        {
-            player.HandleReadyToStart(IsReadyToStart());
-        }
+        //foreach (var player in GamePlayers)
+        //{
+        //    //player.HandleReadyToStart(IsReadyToStart());
+        //}
     }
 
-    private bool IsReadyToStart()
+    public bool IsReadyToStart()
     {
         if (numPlayers < minPlayers) { return false; }
 
-        foreach (var player in RoomPlayers)
+        foreach (var player in NetworkServer.connections)
         {
-            if (!player.IsReady) { return false; }
+            if (!player.Value.identity.GetComponent<PlayerController>().IsReady) { return false; }
         }
 
         return true;
@@ -120,33 +109,15 @@ public class XNetworkManager : NetworkManager
     {
         if (/*SceneManager.GetActiveScene().name == menuScene*/ true)
         {
-            if (!IsReadyToStart()) return;
-
-            ServerChangeScene(gameScene);
+            if (IsReadyToStart())
+            {
+                ServerChangeScene(gameScene);
+            }
         }
     }
 
     public override void ServerChangeScene(string newSceneName)
     {
         base.ServerChangeScene(newSceneName);
-    }
-
-    public override void OnServerSceneChanged(string sceneName)
-    {
-        for (int i = RoomPlayers.Count - 1; i >= 0; i--)
-        {
-            //Debug.Log(i);
-            var conn = RoomPlayers[i].connectionToClient;
-            var gameplayerInstance = Instantiate(gamePlayerPrefab);
-            RoomPlayers.RemoveAt(i);
-            //NetworkServer.Destroy(conn.identity.gameObject);
-            //NetworkServer.DestroyPlayerForConnection(conn);
-            //gameplayerInstance.name = player.DisplayName;
-
-            NetworkServer.ReplacePlayerForConnection(conn, gameplayerInstance.gameObject);
-            //NetworkServer.AddPlayerForConnection(conn, gameplayerInstance.gameObject);
-        }
-
-        base.OnServerSceneChanged(sceneName);
     }
 }

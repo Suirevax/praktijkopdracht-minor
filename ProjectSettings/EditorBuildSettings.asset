@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Personal/Scenes/Testing.unity
     guid: c1595f84c733c99429944788422423ca
   - enabled: 1
+    path: Assets/Personal/Scenes/Lobby.unity
+    guid: 0d35e6d72611e474daf87067b293d7a5
+  - enabled: 1
     path: Assets/Personal/Scenes/Game.unity
     guid: b1527e7ffed52d949bb7f8e08e298d3a
   m_configObjects: {}

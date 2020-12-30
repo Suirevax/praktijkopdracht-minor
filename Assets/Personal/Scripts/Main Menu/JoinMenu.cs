@@ -9,21 +9,21 @@ public class JoinMenu : MonoBehaviour
     [SerializeField] private XNetworkManager networkManager = null;
 
     [Header("UI")]
-    [SerializeField] private GameObject landingPagePanel = null;
+    //[SerializeField] private GameObject landingPagePanel = null;
     [SerializeField] private TMP_InputField ipAdressInputField = null;
-    [SerializeField] private Button joinButton = null;
+    //[SerializeField] private Button joinButton = null;
 
-    private void OnEnable()
-    {
-        XNetworkManager.OnClientConnected += HandleClientConnected;
-        XNetworkManager.OnClientDisconnected += HandleClientDisconnected;
-    }
+    //private void OnEnable()
+    //{
+    //    XNetworkManager.OnClientConnected += HandleClientConnected;
+    //    XNetworkManager.OnClientDisconnected += HandleClientDisconnected;
+    //}
     
-    private void OnDisable()
-    {
-        XNetworkManager.OnClientConnected -= HandleClientConnected;
-        XNetworkManager.OnClientDisconnected -= HandleClientDisconnected;
-    }
+    //private void OnDisable()
+    //{
+    //    XNetworkManager.OnClientConnected -= HandleClientConnected;
+    //    XNetworkManager.OnClientDisconnected -= HandleClientDisconnected;
+    //}
 
     public void JoinLobby()
     {
@@ -31,19 +31,19 @@ public class JoinMenu : MonoBehaviour
         networkManager.networkAddress = ipAdress;
         networkManager.StartClient();
 
-        joinButton.interactable = false;
+        //joinButton.interactable = false;
     }
 
-    private void HandleClientConnected()
-    {
-        joinButton.interactable = true;
+    //private void HandleClientConnected()
+    //{
+    //    joinButton.interactable = true;
 
-        gameObject.SetActive(false);
-        landingPagePanel.SetActive(false);
-    }
+    //    gameObject.SetActive(false);
+    //    landingPagePanel.SetActive(false);
+    //}
 
-    private void HandleClientDisconnected()
-    {
-        joinButton.interactable = true;
-    }
+    //private void HandleClientDisconnected()
+    //{
+    //    joinButton.interactable = true;
+    //}
 }

@@ -8,11 +8,58 @@ public class MainMenu : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private GameObject landingPagePanel = null;
+    [SerializeField] private GameObject nameInputPanel = null;
+    [SerializeField] private GameObject ipJoinPanel = null;
 
-    public void HostLobby()
+    public enum MainMenuStates {NAMEINPUT, LANDINGPAGE, IPJOIN, NONE };
+
+    private MainMenuStates mainMenuState = MainMenuStates.NAMEINPUT;
+
+    private const string PlayerPrefsNameKey = "PlayerName";
+
+    private void Awake()
     {
-        networkManager.StartHost();
+        if (PlayerPrefs.HasKey(PlayerPrefsNameKey))
+        {
+            ChangeState(MainMenuStates.LANDINGPAGE);
+        }
+    }
 
-        landingPagePanel.SetActive(false);
+    private void ChangeState(MainMenuStates newState)
+    {
+        mainMenuState = newState;
+
+        switch (mainMenuState)
+        {
+            case MainMenuStates.NAMEINPUT:
+                landingPagePanel.SetActive(false);
+                nameInputPanel.SetActive(true);
+                ipJoinPanel.SetActive(false);
+                break;
+
+            case MainMenuStates.LANDINGPAGE:
+                landingPagePanel.SetActive(true);
+                nameInputPanel.SetActive(false);
+                ipJoinPanel.SetActive(false);
+                break;
+
+            case MainMenuStates.IPJOIN:
+                landingPagePanel.SetActive(false);
+                nameInputPanel.SetActive(false);
+                ipJoinPanel.SetActive(true);
+                break;
+
+            case MainMenuStates.NONE:
+                landingPagePanel.SetActive(false);
+                nameInputPanel.SetActive(false);
+                ipJoinPanel.SetActive(false);
+                break;
+        }
+    }
+
+    public void HostLobbyButtonPressed()
+    {
+        ChangeState(MainMenuStates.NONE);
+        networkManager.StartHost();
     }
 }
