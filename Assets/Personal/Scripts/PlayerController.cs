@@ -25,10 +25,8 @@ public class PlayerController : NetworkBehaviour
     [SyncVar]
     public bool IsReady = false;
 
-    //game
-    [SerializeField]
-    [SyncVar (hook = nameof(ImposterStatusChanged))]
-    bool IsImposter = false;
+    [SyncVar]
+    public bool IsImposter = false;
 
     [SerializeField] float movementSpeed = 0f;
     //[SerializeField] TMP_Text playerNamePlatePrefab;
@@ -125,6 +123,16 @@ public class PlayerController : NetworkBehaviour
     [Client]
     void FixedUpdate()
     {
+        if (hasAuthority && IsImposter)
+        {
+            foreach (var player in NetworkManager.players)
+            {
+                if (player.IsImposter)
+                {
+                    player.transform.GetChild(0).GetComponent<TMP_Text>().color = Color.red;
+                }
+            }
+        }
 
         if (hasAuthority && (currentState == playerState.alive)){
             Vector2 movement = Vector2.zero;
@@ -270,20 +278,29 @@ public class PlayerController : NetworkBehaviour
         var ImposterAmount = keys.Count / 2;
         List<int> randomPlayerNumbers = new List<int>();
 
-        for (int i = 0; i < ImposterAmount;)
-        {
-            int randomPlayer = keys[Random.Range(0, keys.Count)];
-            if (!randomPlayerNumbers.Contains(randomPlayer))
-            {
-                randomPlayerNumbers.Add(randomPlayer);
-                i++;
-            }
-        }
+        //for (int i = 0; i < ImposterAmount;)
+        //{
+        //    int randomPlayer = keys[Random.Range(0, keys.Count)];
+        //    if (!randomPlayerNumbers.Contains(randomPlayer))
+        //    {
+        //        randomPlayerNumbers.Add(randomPlayer);
+        //        i++;
+        //    }
+        //}
+
+        randomPlayerNumbers.Add(0);
+        randomPlayerNumbers.Add(keys[1]);
 
         foreach (var randomNumber in randomPlayerNumbers)
         {
             NetworkServer.connections[randomNumber].identity.GetComponent<PlayerController>().IsImposter = true;
         }
+
+        //foreach (var randomNumber in randomPlayerNumbers)
+        //{
+        //    TargetSetImposterUI(NetworkServer.connections[randomNumber]);
+        //}
+
     }
 
     public void ImposterStatusChanged(bool oldValue, bool newValue)
@@ -298,5 +315,29 @@ public class PlayerController : NetworkBehaviour
     void CmdChangePlayerNamePlateColor(Color color)
     {
         playerNamePlateColor = color;
+    }
+
+    //[TargetRpc]
+    //public void TargetSetImposterUI(NetworkConnection target)
+    //{
+    //    foreach(var conn in NetworkServer.connections)
+    //    {
+    //        var tmp = conn.Value.identity.GetComponent<PlayerController>();
+    //        if (tmp.IsImposter)
+    //        {
+    //            tmp.setLocalPlayerNamePlateColor(Color.red);
+    //        }
+    //    }
+    //}
+
+    //public void setLocalPlayerNamePlateColor(Color newColor)
+    //{
+    //    gameObject.transform.GetChild(0).GetComponent<TMP_Text>().color = newColor;
+    //}
+
+    [ClientRpc]
+    public void RpcUpdatePlayerList()
+    {
+        NetworkManager.UpdateGamePlayers();
     }
 }

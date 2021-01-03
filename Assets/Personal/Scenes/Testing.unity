@@ -321,6 +321,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6182085593188982819, guid: ad9e58f3d181c0e4289887f534c0c879,
         type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 1225647738}
+    - target: {fileID: 6182085593188982819, guid: ad9e58f3d181c0e4289887f534c0c879,
+        type: 3}
       propertyPath: onlineScene
       value: 
       objectReference: {fileID: 0}
@@ -448,7 +453,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0.1
+  syncInterval: 0
 --- !u!4 &1225647739
 Transform:
   m_ObjectHideFlags: 0

@@ -11,6 +11,7 @@ public class XNetworkManager : NetworkManager
     [Scene] [SerializeField] public string gameScene = string.Empty;
     [Scene] [SerializeField] private string lobbyScene = string.Empty;
 
+    [SerializeField] GameManager gameManagerPrefab = null;
 
     [Header("Game")]
     [SerializeField] private PlayerController gamePlayerPrefab = null;
@@ -18,7 +19,7 @@ public class XNetworkManager : NetworkManager
     public static event UnityAction OnClientConnected;
     public static event UnityAction OnClientDisconnected;
 
-    //public List<PlayerController> GamePlayers { get; private set; } = new List<PlayerController>();
+    public List<PlayerController> players = new List<PlayerController>();
 
     public override void OnClientConnect(NetworkConnection conn)
     {
@@ -58,12 +59,17 @@ public class XNetworkManager : NetworkManager
     {
         if (/*SceneManager.GetActiveScene().name == menuScene*/ true)
         {
-
             PlayerController playerControllerInstance = Instantiate(gamePlayerPrefab);
 
-
             NetworkServer.AddPlayerForConnection(conn, playerControllerInstance.gameObject);
+
+            NetworkServer.localConnection.identity.GetComponent<PlayerController>().RpcUpdatePlayerList();
         }
+    }
+
+    private void OnDestroy()
+    {
+
     }
 
     public override void OnServerDisconnect(NetworkConnection conn)
@@ -72,12 +78,13 @@ public class XNetworkManager : NetworkManager
         {
             var player = conn.identity.GetComponent<PlayerController>();
 
-            //GamePlayers.Remove(player);
 
             NotifyPlayersOfReadyState();
         }
 
         base.OnServerDisconnect(conn);
+
+        NetworkServer.localConnection.identity.GetComponent<PlayerController>().RpcUpdatePlayerList();
     }
 
     public override void OnStopServer()
@@ -120,4 +127,28 @@ public class XNetworkManager : NetworkManager
     {
         base.ServerChangeScene(newSceneName);
     }
+
+    public void UpdateGamePlayers()
+    {
+        var playerObjects = GameObject.FindGameObjectsWithTag("Player");
+
+        //foreach (var player in playerObjects)
+        //{
+        //    var playerController = player.GetComponent<PlayerController>();
+        //    if (!players.Contains(playerController))
+        //    {
+        //        players.Add(playerController);
+        //    }
+        //}
+
+        players.Clear();
+
+        foreach(var playerObject in playerObjects)
+        {
+            players.Add(playerObject.GetComponent<PlayerController>());
+        }
+
+        Debug.Log(players.Count);
+    }
+
 }

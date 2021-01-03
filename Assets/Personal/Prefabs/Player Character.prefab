@@ -116,10 +116,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0.1
+  syncInterval: 0
+  IsReady: 0
+  IsImposter: 0
   movementSpeed: 50
   playerNamePlate: {fileID: 4645662887660029545}
   playerName: 
+  playerColor: {r: 0, g: 0, b: 0, a: 0}
+  playerNamePlateColor: {r: 0, g: 0, b: 0, a: 0}
   currentState: 0
 --- !u!60 &6559256926251574858
 PolygonCollider2D:

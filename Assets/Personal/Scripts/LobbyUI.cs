@@ -52,7 +52,6 @@ public class LobbyUI : MonoBehaviour
 
         if (localPlayerController != null)
         {
-            //Debug.Log(localPlayerController.IsLeader);
             if (localPlayerController.IsLeader)
             {
                 startButton.gameObject.SetActive(true);
