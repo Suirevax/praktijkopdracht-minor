@@ -80,6 +80,10 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
+    Animator animator;
+    new Rigidbody2D rigidbody2D;
+
+
     [Client]
     private void Start()
     {
@@ -91,6 +95,10 @@ public class PlayerController : NetworkBehaviour
         {
             CmdChangePlayerName(PlayerPrefs.GetString("PlayerName"));
         }
+
+        animator = GetComponent<Animator>();
+
+        rigidbody2D = GetComponent<Rigidbody2D>();
 
     }
 
@@ -140,21 +148,40 @@ public class PlayerController : NetworkBehaviour
             if (Input.GetKey(KeyCode.RightArrow))
             {
                 movement += Vector2.right;
+               // animator.Play("Walk Right");
+
             }
             if (Input.GetKey(KeyCode.LeftArrow))
             {
                 movement += Vector2.left;
+                //animator.Play("Walk Left");
+
             }
             if (Input.GetKey(KeyCode.UpArrow))
             {
                 movement += Vector2.up;
+                //animator.SetBool("Moving Up", true);
+                //animator.SetBool("Idle", false);
+                //animator.Play("Walk Up");
             }
             if (Input.GetKey(KeyCode.DownArrow))
             {
                 movement += Vector2.down;
+                //animator.Play("Walk Down");
+
             }
 
-            if(movement != Vector2.zero) CmdMove(movement.normalized);
+            if (movement != Vector2.zero)
+            {
+                CmdMove(movement.normalized);
+            }
+            else
+            {
+                //animator.SetBool("Idle", true);
+                //animator.SetBool("Moving Up", false);
+
+            }
+
 
             if (Input.GetKey(KeyCode.Space) && IsImposter == true)
             {
@@ -172,6 +199,45 @@ public class PlayerController : NetworkBehaviour
                     }
                 }
             }
+
+
+
+        }
+
+        //animator.SetFloat("Horizontal Speed" , rigidbody2D.velocity.x);
+        //animator.SetFloat("Vertical Speed" , rigidbody2D.velocity.y);
+    }
+
+    [Client]
+    private void Update()
+    {
+
+        if (hasAuthority)
+        {
+            var currentVelocity = GetComponent<Rigidbody2D>().velocity;
+
+            float requiredVelocity = 0.5f;
+
+            if (currentVelocity.x > requiredVelocity)
+            {
+                animator.Play("Walk Right");
+            }
+            else if (currentVelocity.x < -requiredVelocity)
+            {
+                animator.Play("Walk Left");
+            }
+            else if (currentVelocity.y > requiredVelocity)
+            {
+                animator.Play("Walk Up");
+            }
+            else if (currentVelocity.y < -requiredVelocity)
+            {
+                animator.Play("Walk Down");
+            }
+            else
+            {
+                animator.Play("Idle Down");
+            }
         }
     }
 
@@ -181,7 +247,6 @@ public class PlayerController : NetworkBehaviour
         otherPlayer.GetComponent<PlayerController>().SetState(playerState.dead);
     }
 
-    [Command]
     private void CmdMove(Vector2 movement) {
         GetComponent<Rigidbody2D>().AddForce(movement.normalized * movementSpeed, ForceMode2D.Force);
     }
@@ -274,6 +339,11 @@ public class PlayerController : NetworkBehaviour
     [Command]
     public void CmdStartRound()
     {
+        if(GameObject.FindGameObjectsWithTag("Player").Length == 1)
+        {
+            return;
+        }
+
         List<int> keys = new List<int>(NetworkServer.connections.Keys);
         var ImposterAmount = keys.Count / 2;
         List<int> randomPlayerNumbers = new List<int>();

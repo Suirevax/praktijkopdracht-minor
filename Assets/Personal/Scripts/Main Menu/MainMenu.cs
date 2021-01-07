@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class MainMenu : MonoBehaviour
 {
@@ -10,6 +11,10 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private GameObject landingPagePanel = null;
     [SerializeField] private GameObject nameInputPanel = null;
     [SerializeField] private GameObject ipJoinPanel = null;
+
+    [Header("Change Name")]
+    [SerializeField] private TMP_Text currentNameText = null;
+    [SerializeField] private TMP_InputField currentNameInputField = null;
 
     public enum MainMenuStates {NAMEINPUT, LANDINGPAGE, IPJOIN, NONE };
 
@@ -23,6 +28,11 @@ public class MainMenu : MonoBehaviour
         {
             ChangeState(MainMenuStates.LANDINGPAGE);
         }
+    }
+
+    private void Update()
+    {
+        currentNameText.text = PlayerPrefs.GetString(PlayerPrefsNameKey);
     }
 
     private void ChangeState(MainMenuStates newState)
@@ -61,5 +71,17 @@ public class MainMenu : MonoBehaviour
     {
         ChangeState(MainMenuStates.NONE);
         networkManager.StartHost();
+    }
+
+    public void BackButtonIpJoinPressed()
+    {
+        ChangeState(MainMenuStates.LANDINGPAGE);
+    }
+
+    public void ChangeNameSaveButtonPressed()
+    {
+        var newName = currentNameInputField.text;
+        PlayerPrefs.SetString(PlayerPrefsNameKey, newName);
+        currentNameText.text = newName;
     }
 }

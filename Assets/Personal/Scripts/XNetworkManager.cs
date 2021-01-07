@@ -11,7 +11,7 @@ public class XNetworkManager : NetworkManager
     [Scene] [SerializeField] public string gameScene = string.Empty;
     [Scene] [SerializeField] private string lobbyScene = string.Empty;
 
-    [SerializeField] GameManager gameManagerPrefab = null;
+    //[SerializeField] GameManager gameManagerPrefab = null;
 
     [Header("Game")]
     [SerializeField] private PlayerController gamePlayerPrefab = null;
@@ -33,6 +33,8 @@ public class XNetworkManager : NetworkManager
         base.OnClientDisconnect(conn);
 
         OnClientDisconnected?.Invoke();
+
+        SceneManager.LoadScene(0, LoadSceneMode.Single);
     }
 
     public override void OnServerConnect(NetworkConnection conn)
@@ -55,6 +57,13 @@ public class XNetworkManager : NetworkManager
         StartLobby();
     }
 
+    public override void OnStopHost()
+    {
+        base.OnStopHost();
+        SceneManager.LoadScene(0, LoadSceneMode.Single);
+        Destroy(gameObject);
+    }
+
     public override void OnServerAddPlayer(NetworkConnection conn)
     {
         if (/*SceneManager.GetActiveScene().name == menuScene*/ true)
@@ -65,11 +74,6 @@ public class XNetworkManager : NetworkManager
 
             NetworkServer.localConnection.identity.GetComponent<PlayerController>().RpcUpdatePlayerList();
         }
-    }
-
-    private void OnDestroy()
-    {
-
     }
 
     public override void OnServerDisconnect(NetworkConnection conn)
@@ -84,7 +88,10 @@ public class XNetworkManager : NetworkManager
 
         base.OnServerDisconnect(conn);
 
-        NetworkServer.localConnection.identity.GetComponent<PlayerController>().RpcUpdatePlayerList();
+        if(conn != NetworkServer.localConnection)
+        {
+            NetworkServer.localConnection.identity.GetComponent<PlayerController>().RpcUpdatePlayerList();
+        }
     }
 
     public override void OnStopServer()
@@ -148,7 +155,6 @@ public class XNetworkManager : NetworkManager
             players.Add(playerObject.GetComponent<PlayerController>());
         }
 
-        Debug.Log(players.Count);
     }
 
 }

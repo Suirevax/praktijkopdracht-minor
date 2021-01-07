@@ -5,7 +5,7 @@ using Mirror;
 
 public class MiniGameManager : MonoBehaviour
 {
-    [SerializeField] RoundManager roundManager = null;
+    //[SerializeField] RoundManager roundManager = null;
 
     [SerializeField] GameObject miniGameCanvas = null;
     [SerializeField] GameObject grammatica1 = null;
