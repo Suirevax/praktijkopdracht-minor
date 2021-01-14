@@ -4,9 +4,16 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Mirror;
 using TMPro;
+using UnityEngine.Events;
+using UnityEngine.Rendering;
+
 
 public class PlayerController : NetworkBehaviour
 {
+    [SerializeField] RenderPipelineAsset renderPipelineDefault;
+    [SerializeField] RenderPipelineAsset renderPipelineCustom;
+
+
     //Lobby stuff
     [SyncVar]
     private bool isLeader = false;
@@ -25,7 +32,7 @@ public class PlayerController : NetworkBehaviour
     [SyncVar]
     public bool IsReady = false;
 
-    [SyncVar]
+    [SyncVar (hook = nameof(newImposter))]
     public bool IsImposter = false;
 
     [SerializeField] float movementSpeed = 0f;
@@ -33,7 +40,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] TMP_Text playerNamePlate = null;
     //[SerializeField] Vector2 namePlateOffset = new Vector2(0, 0);
 
-    public enum playerState { alive, dead, inMiniGame };
+    public enum playerState { alive, dead };
 
     [SyncVar(hook = nameof(PlayerNameChanged))]
     public string playerName = null;
@@ -83,8 +90,10 @@ public class PlayerController : NetworkBehaviour
     Animator animator;
     new Rigidbody2D rigidbody2D;
 
+    public static event UnityAction OnPlayerKilled;
 
-    [Client]
+
+[Client]
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
@@ -100,6 +109,21 @@ public class PlayerController : NetworkBehaviour
 
         rigidbody2D = GetComponent<Rigidbody2D>();
 
+    }
+
+    [Client]
+    void newImposter(bool oldValue, bool newValue)
+    {
+        if (NetworkClient.connection.identity.GetComponent<PlayerController>().IsImposter)
+        {
+            foreach(var player in FindObjectsOfType<PlayerController>())
+            {
+                if (player.IsImposter)
+                {
+                    player.transform.GetChild(0).GetComponent<TMP_Text>().color = Color.red;
+                }
+            }
+        }
     }
 
     [Command]
@@ -120,7 +144,6 @@ public class PlayerController : NetworkBehaviour
     public override void OnStartClient()
     {
         base.OnStartClient();
-        //NetworkManager.GamePlayers.Add(this);
 
         if(NetworkServer.connections.Count == 1)
         {
@@ -131,43 +154,30 @@ public class PlayerController : NetworkBehaviour
     [Client]
     void FixedUpdate()
     {
-        if (hasAuthority && IsImposter)
-        {
-            foreach (var player in NetworkManager.players)
-            {
-                if (player.IsImposter)
-                {
-                    player.transform.GetChild(0).GetComponent<TMP_Text>().color = Color.red;
-                }
-            }
-        }
+        transform.GetChild(1).gameObject.SetActive(hasAuthority);
 
-        if (hasAuthority && (currentState == playerState.alive)){
+        if (hasAuthority/* && (currentState == playerState.alive)*/)
+        {
             Vector2 movement = Vector2.zero;
 
             if (Input.GetKey(KeyCode.RightArrow))
             {
                 movement += Vector2.right;
-               // animator.Play("Walk Right");
 
             }
             if (Input.GetKey(KeyCode.LeftArrow))
             {
                 movement += Vector2.left;
-                //animator.Play("Walk Left");
 
             }
             if (Input.GetKey(KeyCode.UpArrow))
             {
                 movement += Vector2.up;
-                //animator.SetBool("Moving Up", true);
-                //animator.SetBool("Idle", false);
-                //animator.Play("Walk Up");
+
             }
             if (Input.GetKey(KeyCode.DownArrow))
             {
                 movement += Vector2.down;
-                //animator.Play("Walk Down");
 
             }
 
@@ -177,74 +187,75 @@ public class PlayerController : NetworkBehaviour
             }
             else
             {
-                //animator.SetBool("Idle", true);
-                //animator.SetBool("Moving Up", false);
 
             }
 
 
             if (Input.GetKey(KeyCode.Space) && IsImposter == true)
             {
-                var tmp = GetComponent<PolygonCollider2D>();
+                var tmp = GetComponent<BoxCollider2D>();
                 var contactFilter2D = new ContactFilter2D();
                 contactFilter2D.NoFilter();
                 var colliderList = new List<Collider2D>();
                 tmp.OverlapCollider(contactFilter2D, colliderList);
 
-                foreach(Collider2D collider in colliderList)
+                foreach (Collider2D collider in colliderList)
                 {
                     if (collider.CompareTag("Player"))
                     {
-                        killPlayerCommand(collider.gameObject);
+                        CmdkillPlayer(collider.gameObject);
                     }
                 }
             }
-
-
-
-        }
-
-        //animator.SetFloat("Horizontal Speed" , rigidbody2D.velocity.x);
-        //animator.SetFloat("Vertical Speed" , rigidbody2D.velocity.y);
-    }
-
-    [Client]
-    private void Update()
-    {
-
-        if (hasAuthority)
-        {
-            var currentVelocity = GetComponent<Rigidbody2D>().velocity;
-
-            float requiredVelocity = 0.5f;
-
-            if (currentVelocity.x > requiredVelocity)
-            {
-                animator.Play("Walk Right");
-            }
-            else if (currentVelocity.x < -requiredVelocity)
-            {
-                animator.Play("Walk Left");
-            }
-            else if (currentVelocity.y > requiredVelocity)
-            {
-                animator.Play("Walk Up");
-            }
-            else if (currentVelocity.y < -requiredVelocity)
-            {
-                animator.Play("Walk Down");
-            }
-            else
-            {
-                animator.Play("Idle Down");
-            }
         }
     }
+
+    //[Client]
+    //private void Update()
+    //{
+    //    
+
+    //    if (hasAuthority)
+    //    {
+    //        var currentVelocity = GetComponent<Rigidbody2D>().velocity;
+
+    //        float requiredVelocity = 0.5f;
+
+    //        if (currentVelocity.x > requiredVelocity)
+    //        {
+    //            animator.Play("Walk Right");
+    //        }
+    //        else if (currentVelocity.x < -requiredVelocity)
+    //        {
+    //            animator.Play("Walk Left");
+    //        }
+    //        else if (currentVelocity.y > requiredVelocity)
+    //        {
+    //            animator.Play("Walk Up");
+    //        }
+    //        else if (currentVelocity.y < -requiredVelocity)
+    //        {
+    //            animator.Play("Walk Down");
+    //        }
+    //        else
+    //        {
+    //            animator.Play("Idle Down");
+    //        }
+    //    }
+    //}
 
     [Command]
-    private void killPlayerCommand(GameObject otherPlayer)
+    private void CmdkillPlayer(GameObject otherPlayer)
     {
-        otherPlayer.GetComponent<PlayerController>().SetState(playerState.dead);
+        otherPlayer.GetComponent<PlayerController>().RpcSetState(playerState.dead);
+        otherPlayer.GetComponent<PlayerController>().currentState = PlayerController.playerState.dead;
+        OnPlayerKilled?.Invoke();
+    }
+
+    [ClientRpc]
+    private void RpcHandlePlayerKilled()
+    {
+        //var tmp = GameObject.FindGameObjectsWithTag("Player");
     }
 
     private void CmdMove(Vector2 movement) {
@@ -254,15 +265,8 @@ public class PlayerController : NetworkBehaviour
     [Command]
     public void CmdColorChange(Color newColor)
     {
-        //RpcColorChange(newColor);
         playerColor = newColor;
     }
-
-    //[ClientRpc]
-    //void RpcColorChange(Color newColor)
-    //{
-    //    GetComponent<SpriteRenderer>().color = newColor;
-    //}
 
     private void PlayerColorChanged(Color oldValue, Color newValue)
     {
@@ -280,14 +284,8 @@ public class PlayerController : NetworkBehaviour
         playerName = value;
     }
 
-    ////[ClientRpc]
-    //void RpcChangePlayerName(string oldValue, string newValue)
-    //{
-    //    playerNamePlate.GetComponent<TMP_Text>().text = newValue;
-    //}
-
     [ClientRpc]
-    public void SetState(playerState newValue)
+    public void RpcSetState(playerState newValue)
     {
         currentState = newValue;
 
@@ -298,13 +296,25 @@ public class PlayerController : NetworkBehaviour
                 tmpColor = GetComponent<SpriteRenderer>().color;
                 tmpColor.a = 1;
                 GetComponent<SpriteRenderer>().color = tmpColor;
+                gameObject.layer = 9;
+                gameObject.transform.GetChild(0).gameObject.layer = 9;
+                if (hasAuthority)
+                {
+                    GraphicsSettings.renderPipelineAsset = renderPipelineCustom;
+
+                }
                 break;
             case playerState.dead:
+                gameObject.layer = 12;
+                gameObject.transform.GetChild(0).gameObject.layer = 12;
                 tmpColor = GetComponent<SpriteRenderer>().color;
                 tmpColor.a = 0.3f;
                 GetComponent<SpriteRenderer>().color = tmpColor;
-                break;
-            case playerState.inMiniGame:
+                if (hasAuthority)
+                {
+                    GraphicsSettings.renderPipelineAsset = renderPipelineDefault;
+
+                }
                 break;
         }
     }
@@ -405,9 +415,15 @@ public class PlayerController : NetworkBehaviour
     //    gameObject.transform.GetChild(0).GetComponent<TMP_Text>().color = newColor;
     //}
 
-    [ClientRpc]
-    public void RpcUpdatePlayerList()
+    //[ClientRpc]
+    //public void RpcUpdatePlayerList()
+    //{
+    //    NetworkManager.UpdateGamePlayers();
+    //}
+
+    public void resetPlayerPosition()
     {
-        NetworkManager.UpdateGamePlayers();
+        transform.position = Vector2.zero;
+        
     }
 }

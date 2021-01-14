@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2197350703381300268}
   - component: {fileID: 6182085593188982819}
   - component: {fileID: 581791616979329965}
+  - component: {fileID: 6853749615542572484}
   m_Layer: 0
   m_Name: Network Manager
   m_TagString: Untagged
@@ -69,9 +70,9 @@ MonoBehaviour:
   OnServerDisconnected:
     m_PersistentCalls:
       m_Calls: []
-  Port: 7777
+  Port: 7778
   NoDelay: 1
-  Interval: 10
+  Interval: 2
   FastResend: 0
   CongestionWindow: 1
   SendWindowSize: 128
@@ -110,9 +111,9 @@ MonoBehaviour:
   minPlayers: 1
   menuScene: 
   gameScene: 
-  roomPlayerPrefab: {fileID: 6854242285682859520, guid: 56a5c939ba9ba60468cc379e7b560560,
-    type: 3}
+  lobbyScene: 
   gamePlayerPrefab: {fileID: 0}
+  players: []
 --- !u!114 &581791616979329965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,3 +129,51 @@ MonoBehaviour:
   showGUI: 1
   offsetX: 0
   offsetY: 0
+--- !u!114 &6853749615542572484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2197350703381300267}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0110f245bfcfc7d459681f7bd9ebc590, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnClientConnected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClientDataReceived:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClientError:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClientDisconnected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnServerConnected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnServerDataReceived:
+    m_PersistentCalls:
+      m_Calls: []
+  OnServerError:
+    m_PersistentCalls:
+      m_Calls: []
+  OnServerDisconnected:
+    m_PersistentCalls:
+      m_Calls: []
+  port: 7779
+  maxMessageSize: 16384
+  handshakeMaxSize: 3000
+  noDelay: 1
+  sendTimeout: 5000
+  receiveTimeout: 20000
+  serverMaxMessagesPerTick: 10000
+  clientMaxMessagesPerTick: 1000
+  sslEnabled: 1
+  sslCertJson: ./cert.json
+  sslProtocols: 3072
+  _logLevels: 0

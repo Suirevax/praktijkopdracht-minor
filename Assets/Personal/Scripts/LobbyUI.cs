@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Mirror;
+using UnityEngine.Rendering;
 
 public class LobbyUI : MonoBehaviour
 {
     [SerializeField] Button startButton = null;
+
+    [SerializeField] RenderPipelineAsset renderPipelineDefault;
 
     [Scene] [SerializeField] string gameScene = string.Empty;
 
@@ -21,22 +24,30 @@ public class LobbyUI : MonoBehaviour
         }
     }
 
+
     public void ReadyButtonPressed()
     {
         PlayerController localplayer = NetworkClient.connection.identity.GetComponent<PlayerController>();
         localplayer.CmdToggleReady();
+        Debug.Log("ReadyButtonPressed");
     }
 
     public void StartButtonPressed()
     {
         NetworkClient.connection.identity.GetComponent<PlayerController>().CmdStartRound();
-
         NetworkManager.ServerChangeScene(gameScene);
     }
 
     private void Start()
     {
         startButton.gameObject.SetActive(false);
+
+        GraphicsSettings.renderPipelineAsset = renderPipelineDefault;
+
+        //foreach (var player in FindObjectsOfType<PlayerController>())
+        //{
+        //    player.ResetPlayers();
+        //}
     }
 
     private void Update()

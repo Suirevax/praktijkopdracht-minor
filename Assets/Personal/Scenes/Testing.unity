@@ -663,7 +663,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &977608121
 PrefabInstance:
@@ -679,13 +679,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2197350703381300268, guid: ad9e58f3d181c0e4289887f534c0c879,
         type: 3}
-      propertyPath: Interval
-      value: 2
+      propertyPath: Port
+      value: 7778
       objectReference: {fileID: 0}
     - target: {fileID: 2197350703381300268, guid: ad9e58f3d181c0e4289887f534c0c879,
         type: 3}
-      propertyPath: FastResend
-      value: 0
+      propertyPath: Interval
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2197350703381300270, guid: ad9e58f3d181c0e4289887f534c0c879,
         type: 3}
@@ -807,6 +807,11 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 6182085593188982819, guid: ad9e58f3d181c0e4289887f534c0c879,
         type: 3}
+      propertyPath: autoStartServerBuild
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6182085593188982819, guid: ad9e58f3d181c0e4289887f534c0c879,
+        type: 3}
       propertyPath: spawnPrefabs.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -838,7 +843,8 @@ PrefabInstance:
       propertyPath: spawnPrefabs.Array.data[4]
       value: 
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6853749615542572484, guid: ad9e58f3d181c0e4289887f534c0c879, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ad9e58f3d181c0e4289887f534c0c879, type: 3}
 --- !u!1 &987059818
 GameObject:
@@ -1220,7 +1226,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1225647740
 MonoBehaviour:
@@ -2096,6 +2102,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: SetActive
+      objectReference: {fileID: 0}
+    - target: {fileID: 2947081632737751452, guid: 9d02589cb8c0a294a8b0d325d10f6c2c,
+        type: 3}
+      propertyPath: m_text
+      value: Intenses
       objectReference: {fileID: 0}
     - target: {fileID: 2947081632737751452, guid: 9d02589cb8c0a294a8b0d325d10f6c2c,
         type: 3}

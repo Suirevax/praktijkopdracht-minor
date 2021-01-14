@@ -7,6 +7,8 @@ public class MiniGamePad : MonoBehaviour
 {
     [SerializeField] GameObject MiniGameManager = null;
 
+    [SerializeField] MiniGameManager.state MiniGameType = global::MiniGameManager.state.none;
+
     Color passiveColor = Color.white;
     Color selectedColor = Color.grey;
 
@@ -17,7 +19,7 @@ public class MiniGamePad : MonoBehaviour
         if(selected && Input.GetKey(KeyCode.Space))
         {
             //MiniGameManager.GetComponent<MiniGameManager>().SetCurrentState(global::MiniGameManager.state.targetPractice);
-            MiniGameManager.GetComponent<MiniGameManager>().SetCurrentState(global::MiniGameManager.state.grammatica1);
+            MiniGameManager.GetComponent<MiniGameManager>().SetCurrentState(MiniGameType);
         }
     }
 

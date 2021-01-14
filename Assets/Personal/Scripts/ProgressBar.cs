@@ -9,7 +9,7 @@ using UnityEngine.Events;
 public class ProgressBar : MonoBehaviour
 {
     //[SyncVar(hook = nameof(UpdateProgress))]
-    float progress = 0;
+    public float progress { get; private set; } = 0;
 
     float maxProgress = 100;
 

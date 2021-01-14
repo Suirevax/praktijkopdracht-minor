@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 7665566618269110942}
   - component: {fileID: 6139622804747370972}
   - component: {fileID: -5248285155926512905}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player Character
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -121,6 +121,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0
+  renderPipelineDefault: {fileID: 11400000, guid: c52a4d57bd5f6554783d166c3db0900c,
+    type: 2}
+  renderPipelineCustom: {fileID: 11400000, guid: 0869720becc71c649877a82ab34814c6,
+    type: 2}
   IsReady: 0
   IsImposter: 0
   movementSpeed: 50
@@ -263,7 +267,7 @@ GameObject:
   - component: {fileID: 8981853755618537289}
   - component: {fileID: 5586839325190749446}
   - component: {fileID: 4645662887660029545}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: NamePlate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -493,6 +497,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: FieldOfView
+      objectReference: {fileID: 0}
+    - target: {fileID: 282932625095065583, guid: 8ee6bf6da2358e74b8387df34c02cac3,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 282932625095065583, guid: 8ee6bf6da2358e74b8387df34c02cac3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8ee6bf6da2358e74b8387df34c02cac3, type: 3}

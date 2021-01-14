@@ -19,7 +19,7 @@ public class XNetworkManager : NetworkManager
     public static event UnityAction OnClientConnected;
     public static event UnityAction OnClientDisconnected;
 
-    public List<PlayerController> players = new List<PlayerController>();
+    //public List<PlayerController> players = new List<PlayerController>();
 
     public override void OnClientConnect(NetworkConnection conn)
     {
@@ -44,6 +44,21 @@ public class XNetworkManager : NetworkManager
             conn.Disconnect();
             return;
         }
+    }
+
+    public override void OnServerSceneChanged(string newSceneName)
+    {
+        base.OnServerSceneChanged(newSceneName);
+
+        var tmpPlayers = FindObjectsOfType<PlayerController>();
+
+        foreach (var player in tmpPlayers)
+        {
+            player.resetPlayerPosition();
+            player.IsReady = false;
+        }
+
+        
     }
 
     public void StartLobby()
@@ -71,8 +86,6 @@ public class XNetworkManager : NetworkManager
             PlayerController playerControllerInstance = Instantiate(gamePlayerPrefab);
 
             NetworkServer.AddPlayerForConnection(conn, playerControllerInstance.gameObject);
-
-            NetworkServer.localConnection.identity.GetComponent<PlayerController>().RpcUpdatePlayerList();
         }
     }
 
@@ -83,15 +96,10 @@ public class XNetworkManager : NetworkManager
             var player = conn.identity.GetComponent<PlayerController>();
 
 
-            NotifyPlayersOfReadyState();
+            //NotifyPlayersOfReadyState();
         }
 
         base.OnServerDisconnect(conn);
-
-        if(conn != NetworkServer.localConnection)
-        {
-            NetworkServer.localConnection.identity.GetComponent<PlayerController>().RpcUpdatePlayerList();
-        }
     }
 
     public override void OnStopServer()
@@ -99,13 +107,13 @@ public class XNetworkManager : NetworkManager
         //GamePlayers.Clear();
     }
 
-    public void NotifyPlayersOfReadyState()
-    {
-        //foreach (var player in GamePlayers)
-        //{
-        //    //player.HandleReadyToStart(IsReadyToStart());
-        //}
-    }
+    //public void NotifyPlayersOfReadyState()
+    //{
+    //    foreach (var player in FindObjectsOfType<PlayerController>())
+    //    {
+    //        //player.HandleReadyToStart(IsReadyToStart());
+    //    }
+    //}
 
     public bool IsReadyToStart()
     {
@@ -130,31 +138,26 @@ public class XNetworkManager : NetworkManager
         }
     }
 
-    public override void ServerChangeScene(string newSceneName)
-    {
-        base.ServerChangeScene(newSceneName);
-    }
+    //public void UpdateGamePlayers()
+    //{
+    //    var playerObjects = FindObjectsOfType<PlayerController>();
 
-    public void UpdateGamePlayers()
-    {
-        var playerObjects = GameObject.FindGameObjectsWithTag("Player");
+    //    //foreach (var player in playerObjects)
+    //    //{
+    //    //    var playerController = player.GetComponent<PlayerController>();
+    //    //    if (!players.Contains(playerController))
+    //    //    {
+    //    //        players.Add(playerController);
+    //    //    }
+    //    //}
 
-        //foreach (var player in playerObjects)
-        //{
-        //    var playerController = player.GetComponent<PlayerController>();
-        //    if (!players.Contains(playerController))
-        //    {
-        //        players.Add(playerController);
-        //    }
-        //}
+    //    players.Clear();
+        
+    //    foreach(var playerObject in playerObjects)
+    //    {
+    //        players.Add(playerObject);
+    //    }
 
-        players.Clear();
-
-        foreach(var playerObject in playerObjects)
-        {
-            players.Add(playerObject.GetComponent<PlayerController>());
-        }
-
-    }
+    //}
 
 }
