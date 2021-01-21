@@ -14,13 +14,18 @@ public class MiniGamePad : MonoBehaviour
 
     bool selected = false;
 
-    private void Update()
+    //private void Update()
+    //{
+    //    if(selected && Input.GetKey(KeyCode.Space))
+    //    {
+    //        //MiniGameManager.GetComponent<MiniGameManager>().SetCurrentState(global::MiniGameManager.state.targetPractice);
+    //        MiniGameManager.GetComponent<MiniGameManager>().SetCurrentState(MiniGameType);
+    //    }
+    //}
+
+    public void Activate()
     {
-        if(selected && Input.GetKey(KeyCode.Space))
-        {
-            //MiniGameManager.GetComponent<MiniGameManager>().SetCurrentState(global::MiniGameManager.state.targetPractice);
-            MiniGameManager.GetComponent<MiniGameManager>().SetCurrentState(MiniGameType);
-        }
+        MiniGameManager.GetComponent<MiniGameManager>().SetCurrentState(MiniGameType);
     }
 
 

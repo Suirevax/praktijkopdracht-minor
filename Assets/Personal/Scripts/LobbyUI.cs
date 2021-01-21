@@ -29,7 +29,6 @@ public class LobbyUI : MonoBehaviour
     {
         PlayerController localplayer = NetworkClient.connection.identity.GetComponent<PlayerController>();
         localplayer.CmdToggleReady();
-        Debug.Log("ReadyButtonPressed");
     }
 
     public void StartButtonPressed()

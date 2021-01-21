@@ -8,6 +8,10 @@ public class RoundManager : NetworkBehaviour
 {
     [SerializeField] RenderPipelineAsset renderPipelineGame = null;
 
+
+
+    //[SerializeField] MeetingChat meetingUI;
+
     ProgressBar progressBar = null;
 
     [SerializeField] float MiniGameWinValue = 40;
@@ -29,7 +33,7 @@ public class RoundManager : NetworkBehaviour
         progressBar = GameObject.Find("ProgressBar").GetComponent<ProgressBar>();
 
         ProgressBar.OnProgressFull += GoodGuysWon;
-        PlayerController.OnPlayerKilled += CheckBadGuysWon;
+        PlayerController.OnPlayerKilled += CheckTeamWon;
 
         GraphicsSettings.renderPipelineAsset = renderPipelineGame;
     }
@@ -42,23 +46,34 @@ public class RoundManager : NetworkBehaviour
     }
 
     [Server]
-    public void CheckBadGuysWon()
+    public void CheckTeamWon()
     {
         var tmp = GameObject.FindGameObjectsWithTag("Player");
         bool badGuysWon = true;
+        bool goodGuysWon = true;
 
         foreach (var player in tmp)
         {
             if(player.GetComponent<PlayerController>().currentState == PlayerController.playerState.alive && player.GetComponent<PlayerController>().IsImposter == false)
             {
-                Debug.Log(player.GetComponent<PlayerController>().playerName);
+                //Debug.Log(player.GetComponent<PlayerController>().playerName);
                 badGuysWon = false;
+            }
+
+            if(player.GetComponent<PlayerController>().currentState == PlayerController.playerState.alive && player.GetComponent<PlayerController>().IsImposter == true)
+            {
+                goodGuysWon = false;
             }
         }
 
         if (badGuysWon)
         {
             BadGuysWon();
+        }
+
+        if (goodGuysWon)
+        {
+            GoodGuysWon();
         }
     }
 
@@ -105,4 +120,9 @@ public class RoundManager : NetworkBehaviour
     {
         Debug.Log("Bad Guys Won");
     }
+
+    //public void StartMeeting()
+    //{
+    //    meetingUI.gameObject.transform.GetChild(0).gameObject.SetActive(true);
+    //}
 }

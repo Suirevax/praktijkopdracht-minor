@@ -8,19 +8,46 @@ public class FieldOfView : MonoBehaviour
 {
 
     [SerializeField] LayerMask layerMask;
+    float fov = 360f;
+    int rayCount = 360;
+    float viewDistance = 5f;
+
+    Vector3[] vectorAngles;
+
+    MeshFilter meshFilter = null;
+
+    Mesh mesh;
+
+    float angleIncrease;
+
+    private void Start()
+    {
+        mesh = new Mesh();
+        angleIncrease = fov / rayCount;
+        meshFilter = GetComponent<MeshFilter>();
+
+        CreateAngleTable();
+    }
+
+    void CreateAngleTable()
+    {
+        vectorAngles = new Vector3[rayCount + 1];
+
+        float angle = 0f;
+
+        for (int i = 0; i <= rayCount; i++)
+        {
+            float angleRad = angle * Mathf.Deg2Rad;
+            vectorAngles[i] = new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
+            angle -= angleIncrease;
+        }
+    }
 
 
     // Start is called before the first frame update
     void Update()
     {
-        Mesh mesh = new Mesh();
-
-        float fov = 360f;
-        int rayCount = 360;
-
         float angle = 0f;
-        float angleIncrease = fov / rayCount;
-        float viewDistance = 5f;
 
         Vector3[] vertices = new Vector3[rayCount + 1 + 1];
         Vector2[] uv = new Vector2[vertices.Length];
@@ -33,16 +60,14 @@ public class FieldOfView : MonoBehaviour
         int triangleIndex = 0;
         for (int i = 0; i <= rayCount; i++)
         {
-            float angleRad = angle * Mathf.Deg2Rad;
-            var vectorangle = new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
-            RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, vectorangle, viewDistance, layerMask);
+            RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, vectorAngles[i], viewDistance, layerMask);
 
             Vector3 vertex;
 
 
             if (raycastHit.collider == null)
             {
-                vertex = Vector3.zero + (vectorangle * viewDistance);
+                vertex = Vector3.zero + (vectorAngles[i] * viewDistance);
             }
             else
             {
@@ -70,12 +95,9 @@ public class FieldOfView : MonoBehaviour
         mesh.uv = uv;
         mesh.triangles = triangles;
 
-        GetComponent<MeshFilter>().mesh = mesh;
+        meshFilter.mesh = mesh;
 
     }
 
-    //public void SetOrigin(Vector3 newOrigin)
-    //{
-    //    origin = newOrigin;
-    //}
+
 }

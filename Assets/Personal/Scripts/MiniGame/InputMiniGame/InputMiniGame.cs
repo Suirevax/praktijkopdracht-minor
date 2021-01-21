@@ -15,12 +15,15 @@ public class InputMiniGame : MonoBehaviour
     public void CheckAnswer()
     {
         Debug.Log("Checking Answer");
-        var answer = inputField.text;
+        string answer = inputField.text;
 
         Debug.Log(correctAnswer);
         Debug.Log(answer);
 
-        if (correctAnswer.Equals(answer))
+        Debug.Log(correctAnswer.Length);
+        Debug.Log(answer.Length);
+
+        if (answer.Trim() == correctAnswer)
         {
             Debug.Log("correct answer");
             miniGameManager.Win();
@@ -43,5 +46,6 @@ public class InputMiniGame : MonoBehaviour
 
         questionText.text = questionData[0];
         correctAnswer = questionData[1];
+        correctAnswer = correctAnswer.Trim();
     }
 }
