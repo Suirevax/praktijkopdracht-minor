@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 2197350703381300268}
   - component: {fileID: 6182085593188982819}
   - component: {fileID: 581791616979329965}
-  - component: {fileID: 6853749615542572484}
   m_Layer: 0
   m_Name: Network Manager
   m_TagString: Untagged
@@ -99,37 +98,25 @@ MonoBehaviour:
   onlineScene: 
   transport: {fileID: 2197350703381300268}
   networkAddress: localhost
-  maxConnections: 6
+  maxConnections: 20
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 1250637316902307327, guid: 56a5c939ba9ba60468cc379e7b560560,
+  playerPrefab: {fileID: 856590985929760956, guid: c6f63c5eeb0a8bd4fa7aa40f7723e47d,
     type: 3}
-  autoCreatePlayer: 0
+  autoCreatePlayer: 1
   playerSpawnMethod: 1
-  spawnPrefabs: []
+  spawnPrefabs:
+  - {fileID: 856590985929760956, guid: c6f63c5eeb0a8bd4fa7aa40f7723e47d, type: 3}
+  - {fileID: 1250637316902307327, guid: 56a5c939ba9ba60468cc379e7b560560, type: 3}
+  - {fileID: 6729963866442388337, guid: 495091569856fd14bbe3a467bc8d6a26, type: 3}
   minPlayers: 1
-  menuScene: 
-  gameScene: 
-  lobbyScene: 
-  gamePlayerPrefab: {fileID: 0}
-  players: []
+  menuScene: Assets/Personal/Scenes/Testing.unity
+  gameScene: Assets/Personal/Scenes/Game.unity
+  lobbyScene: Assets/Personal/Scenes/Lobby.unity
+  gamePlayerPrefab: {fileID: 4898803090466081644, guid: 56a5c939ba9ba60468cc379e7b560560,
+    type: 3}
 --- !u!114 &581791616979329965
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2197350703381300267}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6442dc8070ceb41f094e44de0bf87274, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showGUI: 1
-  offsetX: 0
-  offsetY: 0
---- !u!114 &6853749615542572484
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,42 +125,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2197350703381300267}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0110f245bfcfc7d459681f7bd9ebc590, type: 3}
+  m_Script: {fileID: 11500000, guid: 6442dc8070ceb41f094e44de0bf87274, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnClientConnected:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClientDataReceived:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClientError:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClientDisconnected:
-    m_PersistentCalls:
-      m_Calls: []
-  OnServerConnected:
-    m_PersistentCalls:
-      m_Calls: []
-  OnServerDataReceived:
-    m_PersistentCalls:
-      m_Calls: []
-  OnServerError:
-    m_PersistentCalls:
-      m_Calls: []
-  OnServerDisconnected:
-    m_PersistentCalls:
-      m_Calls: []
-  port: 7779
-  maxMessageSize: 16384
-  handshakeMaxSize: 3000
-  noDelay: 1
-  sendTimeout: 5000
-  receiveTimeout: 20000
-  serverMaxMessagesPerTick: 10000
-  clientMaxMessagesPerTick: 1000
-  sslEnabled: 1
-  sslCertJson: ./cert.json
-  sslProtocols: 3072
-  _logLevels: 0
+  showGUI: 1
+  offsetX: 0
+  offsetY: 0

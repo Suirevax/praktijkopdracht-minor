@@ -80,17 +80,6 @@ public class PlayerController : NetworkBehaviour
             return networkManager = Mirror.NetworkManager.singleton as XNetworkManager;
         }
     }
-    
-    GameManager gameManager;
-
-    GameManager GameManager
-    {
-        get
-        {
-            if (networkManager != null) { return gameManager; }
-            return gameManager = GameObject.Find("GameManager").GetComponent<GameManager>(); ;
-        }
-    }
 
     Animator animator;
     new Rigidbody2D rigidbody2D;

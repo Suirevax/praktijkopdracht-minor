@@ -46,6 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  renderPipelineGame: {fileID: 11400000, guid: 0869720becc71c649877a82ab34814c6, type: 2}
+  MiniGameWinValue: 10
 --- !u!114 &588555766057382269
 MonoBehaviour:
   m_ObjectHideFlags: 0
